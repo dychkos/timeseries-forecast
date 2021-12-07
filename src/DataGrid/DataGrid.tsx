@@ -11,8 +11,8 @@ import OneMoreGeneratedDataChart from "./components/OneMoreGeneratedDataChart";
 import DataMiss from "./components/DataMiss";
 
 export const FORECAST_CONFIG = {
-  periodSize: 12,
-  observationsToForeast: 8,
+  periodSize: 24,
+  observationsToForeast: 12,
 };
 
 export const generatedRandom = (size, bottom, top) => {
@@ -28,7 +28,7 @@ export const generatedRandom = (size, bottom, top) => {
 const DataGrid = () => {
   return (
     <div>
-      <Typography.Title>Realtime timeseries forecast</Typography.Title>
+      <Typography.Title>Система прогнозування енергоспоживання будинків</Typography.Title>
       <div className={styles.DataGridContainer}>
         <MockDataChart />
 

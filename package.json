@@ -20,13 +20,13 @@
     "date-fns": "^2.14.0",
     "holtwinters": "^0.0.1",
     "lodash": "^4.17.15",
-    "node-sass": "^4.14.1",
     "nostradamus": "^0.1.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
     "recharts": "^1.8.5",
-    "typescript": "~3.7.2"
+    "typescript": "~3.7.2",
+    "node-sass": "^4.14.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -48,5 +48,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    
   }
 }

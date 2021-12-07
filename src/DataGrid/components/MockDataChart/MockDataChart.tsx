@@ -16,7 +16,6 @@ import {
   ReferenceLine,
   Label,
 } from "recharts";
-import { mockData1 } from "../../../utils/dataSource/dummy";
 import {
   last,
   getPredictions,
@@ -24,6 +23,8 @@ import {
 } from "../../../utils/dataManagers/forecastManager";
 import { parse, addMonths, format } from "date-fns";
 import { Typography, Button } from "antd";
+import { mockData1 } from "../../../utils/dataSource/dummy";
+
 
 const initialState = {
   start: 0,
@@ -76,19 +77,19 @@ const CustomTooltip = (props) => {
     return (
       <div className={styles.TooltipContainer}>
         <p className={styles.TooltipLabel}>{label}</p>
-        {dataItem?.Sales && (
+        {dataItem?.Energy && (
           <p className={styles.TooltipValue}>
-            <b>Sales</b>: {dataItem?.Sales}
+            <b>Спожито:</b>: {dataItem?.Energy} млрд кВт∙год
           </p>
         )}
-        {!dataItem?.Sales && dataItem?.predicted && (
+        {!dataItem?.Energy && dataItem?.predicted && (
           <p className={styles.TooltipValue}>
-            <b>Predicted values:</b> {dataItem?.predicted}
+            <b>Прогнозоване значення:</b> {dataItem?.predicted}
           </p>
         )}
         {precisionLabel() && (
           <p className={styles.TooltipValue}>
-            <b>Precision Area:</b> {precisionLabel()}
+            <b>Діапазон точності:</b> {precisionLabel()}
           </p>
         )}
       </div>
@@ -100,10 +101,10 @@ const CustomTooltip = (props) => {
 
 const CustomizedAxisTick = (props) => {
   const { x, y, stroke, payload, data } = props;
-  // console.log(props);
-  const content = data.find((i) => i.Period === payload.value)?.Sales;
+  const content = data.find((i) => i.Period === payload.value)?.Energy;
   const contentPredicted = data.find((i) => i.Period === payload.value)
     ?.predicted;
+
 
   return (
     <>
@@ -117,7 +118,7 @@ const CustomizedAxisTick = (props) => {
           fill="#fff"
           transform="rotate(0)"
         >
-          {content ? `${content}k` : `${contentPredicted.toFixed(2)}k`}
+          {content ? `${content}кВт` : `${contentPredicted.toFixed(2)}кВт`}
         </text>
       </g>
       <g transform={`translate(${x},${y})`}>
@@ -144,7 +145,7 @@ const MockDataChart = () => {
   console.log(state);
 
   const fitMockData = () => {
-    const dataPreparedToPredict: number[] = mockData1.map((i) => i.Sales);
+    const dataPreparedToPredict: number[] = mockData1.map((i) => i.Energy);
     // Taking only predicted values + one point for existing history to make chart smoother
     const predictedRow = last(
       getPredictions(dataPreparedToPredict, FORECAST_CONFIG),
@@ -161,10 +162,10 @@ const MockDataChart = () => {
     // Make point with pre-last available historical data and 0 predicted one
     newChartData[newChartData.length - 2] = {
       ...newChartData[newChartData.length - 2],
-      predicted: newChartData[newChartData.length - 2].Sales,
+      predicted: newChartData[newChartData.length - 2].Energy,
       precisionArea: [
-        newChartData[newChartData.length - 2].Sales,
-        newChartData[newChartData.length - 2].Sales,
+        newChartData[newChartData.length - 2].Energy,
+        newChartData[newChartData.length - 2].Energy,
       ],
     };
 
@@ -184,7 +185,7 @@ const MockDataChart = () => {
         ),
         "yyyy-MMM"
       ),
-      Sales: newChartData[newChartData.length - 1].Sales,
+      Energy: newChartData[newChartData.length - 1].Energy,
       precisionArea: [
         Number(
           (
@@ -215,7 +216,7 @@ const MockDataChart = () => {
     for (let i = 0; i < FORECAST_CONFIG.observationsToForeast; i++) {
       newChartData.push({
         Period: format(addMonths(lastDateParsed, i + 2), "yyyy-MMM"),
-        Sales: null,
+        Energy: null,
         precisionArea: [
           Number((predictedRow[i + 1] * (1 + (i + 1) / 9)).toFixed(2)),
           Number((predictedRow[i + 1] * (1 - (i + 1) / 9)).toFixed(2)),
@@ -250,24 +251,19 @@ const MockDataChart = () => {
 
   const title = (
     <div style={{ color: "white", marginBottom: "30px" }}>
-      <Typography.Title level={3}>Line chart example</Typography.Title>
-      <Typography.Text>
-        (Period size: {FORECAST_CONFIG.periodSize}; Observations to forecast:{" "}
-        {FORECAST_CONFIG.observationsToForeast})
-      </Typography.Text>
-      <br />
+      <Typography.Title level={3}>Графічне представлення</Typography.Title>
       <Typography.Text type="secondary">
-        Dataset size: {mockData?.length}; Predictions are based on last{" "}
+        К-сть записів : <b>{mockData?.length} </b>. Прогнози базуються на останніх{" "}
         <b>
           {mockData &&
             maxValidDataSize(mockData.length, FORECAST_CONFIG.periodSize)}{" "}
         </b>
-        records
+        записах.
       </Typography.Text>
     </div>
   );
 
-  const refLinePeriodName = mockData?.find((i) => i.predicted && i.Sales)
+  const refLinePeriodName = mockData?.find((i) => i.predicted && i.Energy)
     ?.Period;
 
   return (
@@ -278,17 +274,13 @@ const MockDataChart = () => {
         paddingBottom: "150px",
         margin: "auto",
         minWidth: "100%",
-        background:
-          "linear-gradient(to left, rgb(101,120,124) 0%, rgb(50, 60, 62) 100%)",
-        backgroundImage:
-          "linear-gradient(to left, rgb(101, 120, 124) 0%, rgb(50, 60, 62) 100%)",
+        backgroundColor:"#7fc7c8",
         backgroundPositionX: "initial",
         backgroundPositionY: "initial",
         backgroundSize: "initial",
         backgroundAttachment: "initial",
         backgroundOrigin: "initial",
-        backgroundClip: "initial",
-        backgroundColor: "initial",
+        backgroundClip: "initial"
       }}
     >
       {title}
@@ -302,7 +294,7 @@ const MockDataChart = () => {
             top: 25,
             right: 30,
             left: 50,
-            // bottom: 5,
+            bottom: 5,
           }}
         >
           <CartesianGrid
@@ -321,7 +313,7 @@ const MockDataChart = () => {
                 return e.offset.left + itemWidth * idx;
               });
             }}
-            x={mockData?.find((i) => i.predicted && i.Sales)?.Period}
+            x={mockData?.find((i) => i.predicted && i.Energy)?.Period}
           />
           <XAxis
             height={60}
@@ -331,25 +323,28 @@ const MockDataChart = () => {
           />
           <YAxis type="number" hide domain={["dataMin", "dataMax"]} />
           <Tooltip content={<CustomTooltip data={mockData} />} />
+
           <Area
-            isAnimationActive={false}
+            isAnimationActive={true}
             type="monotone"
             dataKey="predicted"
             stroke="#f18153"
             fill="#f18153"
             activeDot={{ r: 3 }}
           />
+
+          {/*<Area*/}
+          {/*  isAnimationActive={true }*/}
+          {/*  type="monotone"*/}
+          {/*  dataKey="precisionArea"*/}
+          {/*  stroke="#2a9d8f"*/}
+          {/*  activeDot={{ r: 3 }}*/}
+          {/*/>*/}
+
           <Area
-            isAnimationActive={false}
-            type="monotone"
-            dataKey="precisionArea"
-            stroke="#2a9d8f"
-            activeDot={{ r: 3 }}
-          />
-          <Area
-            isAnimationActive={false}
+            isAnimationActive={true}
             type="linear"
-            dataKey="Sales"
+            dataKey="Energy"
             stroke="#fff"
             fill="#f18153"
             dot={{ stroke: "white", strokeWidth: 2, r: 4, fill: "black" }}
@@ -365,16 +360,16 @@ const MockDataChart = () => {
             strokeDasharray="15 5"
             label={
               <Label
-                value="Forecast start"
-                fontWeight={600}
+                value="Початок"
+                fontWeight={700}
                 fontSize={18}
-                position="centerTop"
+                position="centerBottom"
                 fill="#fff"
               />
             }
           />
           {!state.isPlaying && (
-            <Brush height={20} startIndex={mockData?.length - 16} />
+            <Brush height={20} startIndex={mockData?.length - 10} />
           )}
         </AreaChart>
       </ResponsiveContainer>
@@ -382,6 +377,7 @@ const MockDataChart = () => {
       <Button
         type="default"
         color="primary"
+        style={{padding:"6px 20px",backgroundColor:"rgb(28,135,84)",color:"white",border:"none"}}
         onClick={() => {
           dispatch({ type: state.isPlaying ? "stop" : "play" });
           state.isPlaying && setMockData(displayData);
