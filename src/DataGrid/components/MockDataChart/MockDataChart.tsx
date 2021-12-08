@@ -60,7 +60,7 @@ const reducer = (state: typeof initialState, action) => {
 };
 
 const FORECAST_CONFIG = {
-  periodSize: 5,
+  periodSize: 12,
   observationsToForeast: 4,
 };
 
@@ -333,13 +333,13 @@ const MockDataChart = () => {
             activeDot={{ r: 3 }}
           />
 
-          {/*<Area*/}
-          {/*  isAnimationActive={true }*/}
-          {/*  type="monotone"*/}
-          {/*  dataKey="precisionArea"*/}
-          {/*  stroke="#2a9d8f"*/}
-          {/*  activeDot={{ r: 3 }}*/}
-          {/*/>*/}
+         <Area
+          isAnimationActive={true }
+            type="monotone"
+            dataKey="precisionArea"
+            stroke="#2a9d8f"
+            activeDot={{ r: 3 }}
+          />
 
           <Area
             isAnimationActive={true}
