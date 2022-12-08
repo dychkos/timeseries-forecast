@@ -100,7 +100,7 @@ const CustomTooltip = (props) => {
 };
 
 const CustomizedAxisTick = (props) => {
-  const { x, y, stroke, payload, data } = props;
+  const { x, y, payload, data } = props;
   const content = data.find((i) => i.Period === payload.value)?.Energy;
   const contentPredicted = data.find((i) => i.Period === payload.value)
     ?.predicted;
@@ -142,7 +142,6 @@ const MockDataChart = () => {
   const [mockData, setMockData] = useState(null);
   const [displayData, setDisplayData] = useState(null);
   const [state, dispatch] = useReducer(reducer, initialState);
-  console.log(state);
 
   const fitMockData = () => {
     const dataPreparedToPredict: number[] = mockData1.map((i) => i.Energy);
@@ -334,7 +333,7 @@ const MockDataChart = () => {
           />
 
          <Area
-          isAnimationActive={true }
+          isAnimationActive={true}
             type="monotone"
             dataKey="precisionArea"
             stroke="#2a9d8f"

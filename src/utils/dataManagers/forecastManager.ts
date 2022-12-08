@@ -1,6 +1,5 @@
 import forecast from "nostradamus";
 import RMSE from "../dataSource/computeError";
-import { da } from "date-fns/locale";
 
 export const safeSum = (a: number, b: number, precision = 2): number => {
   return Number(parseFloat(String(a + b)).toFixed(precision));
